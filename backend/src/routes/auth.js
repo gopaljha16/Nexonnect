@@ -8,6 +8,4 @@ authRoute.delete("/delete" ,deleteUser);
  
 
 
-
-
 module.exports = authRoute;
