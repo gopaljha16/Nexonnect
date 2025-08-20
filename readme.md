@@ -1,1 +1,1 @@
-# NEXONNECT is an Chatting Platform
+# NEXONNECT
