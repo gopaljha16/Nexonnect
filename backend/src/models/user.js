@@ -19,7 +19,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    emailId: {
+    email: {
         type: String,
         required: true,
         unique: true,
@@ -42,7 +42,10 @@ const userSchema = new Schema({
         default: "Hey there! I'm using Nexconnect",
         maxlength: 100,
     },
-
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
     // Friend System
     friends: [
         {
