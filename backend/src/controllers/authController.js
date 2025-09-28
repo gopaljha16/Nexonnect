@@ -23,10 +23,6 @@ const register = async (req, res) => {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    // User must have verified email before this step, or you can alternatively:
-    // 1. Create user here with isVerified: false and empty password.
-    // 2. Require email verification separately before password setup.
-
     // hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -137,7 +133,7 @@ const logout = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    
+     
   } catch (error) {
 
   }
@@ -173,13 +169,10 @@ const verifyEmail = async (req, res) => {
         if (!savedOtp) {
             return res.status(400).json({msg: "OTP expired"});
         }
-
-        // Compare OTPs
         if (otp !== savedOtp) {
             return res.status(400).json({msg: "Invalid OTP"});
         }
 
-        // Mark user as verified
         const user = await User.findOneAndUpdate(
             {email},
             {isVerified: true},
@@ -191,7 +184,6 @@ const verifyEmail = async (req, res) => {
         }
 
         await emailVerificationDone(email);
-        // Optionally, delete OTP from Redis after successful verification
         await redisClient.del(`otp:${email}`);
 
         return res.status(200).json({msg: "Email verified successfully"});
