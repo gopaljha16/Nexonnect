@@ -14,7 +14,9 @@ const register = async (req, res) => {
       return res.status(400).json({ msg: "Please enter all the fields" });
     }
 
-    const existingUser = await User.findOne({ email });
+    const normalizedEmail = email.toLowerCase();
+
+    const existingUser = await User.findOne({ email: normalizedEmail });
 
     if (existingUser) {
       if (!existingUser.isVerified) {
@@ -29,7 +31,7 @@ const register = async (req, res) => {
 
     const newUser = new User({
       firstName,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       isVerified: true
     });
@@ -274,5 +276,25 @@ const verifyPhone = async (req, res) => {
 
 }
 
+// Get current user info
+const getMe = async (req, res) => {
+  try {
+    const user = req.user; // This comes from userMiddleware
+    
+    res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        email: user.email,
+        isVerified: user.isVerified
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
 
-module.exports = { register, login, logout, verifyEmail, sentOtp, resetPassword, forgotPassword, verifyEmail, verifyPhone, googleLogin, sendVerificationEmail };
+
+module.exports = { register, login, logout, verifyEmail, sentOtp, resetPassword, forgotPassword, verifyEmail, verifyPhone, googleLogin, sendVerificationEmail, getMe };
